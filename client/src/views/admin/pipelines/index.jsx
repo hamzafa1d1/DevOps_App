@@ -62,25 +62,33 @@ import {
 import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
 import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
 import Banner from "../pipelines/components/Banner";
+import Card from "components/card/Card"
 
 
 export default function Pipelines() {
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
+    testingFramework: '',
+    testFile: null,
+    containerTool:'',
+    AWSAccessKey: '',
+    AWSSecretAccessKey: ''
   });
 
   // Form submission handler
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log(formData.testingFramework)
     // handle form submission here
   };
 
   // Form input change handler
   const handleChange = (event) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
+    if (event.target.name === "testFile") {
+      setFormData({ ...formData, testFile: event.target.files[0] });
+    } else {
+      setFormData({ ...formData, [event.target.name]: event.target.value });
+    }
   };
 
   // Chakra Color Mode
@@ -91,18 +99,39 @@ export default function Pipelines() {
       <Banner />
       <Box bg={boxBg} p="4" mt="4">
         <form onSubmit={handleSubmit}>
-          <FormControl>
-            <FormLabel>Name</FormLabel>
-            <Input type="text" name="name" value={formData.name} onChange={handleChange} />
-          </FormControl>
-          <FormControl mt="4">
-            <FormLabel>Email</FormLabel>
-            <Input type="email" name="email" value={formData.email} onChange={handleChange} />
-          </FormControl>
-          <FormControl mt="4">
-            <FormLabel>Message</FormLabel>
-            <Textarea name="message" value={formData.message} onChange={handleChange} />
-          </FormControl>
+          <Card p ='4' m='10px'>
+            <FormControl mt ='4'>
+              <FormLabel>Unit Testing Framework</FormLabel>
+              <Select name="testingFramework" value={formData.testingFramework} onChange={handleChange}>
+                <option value="google-test">Google Test</option>
+                <option value="cppunit">CppUnit</option>
+                <option value="boost-test">Boost.Test</option>
+              </Select>
+            </FormControl >
+            <FormControl>
+              <FormLabel>Upload Unit Test Code</FormLabel>
+              <Button onClick={() => document.querySelector('input[type="file"]').click()}>
+                Choose File
+              </Button>
+              <Input type="file" name="testFile" accept=".cpp,.h" style={{display: "none"}} />
+            </FormControl>
+          </Card>
+          <Card m='10px'>
+            <FormControl mt ='4'>
+              <FormLabel>Containerization Tool</FormLabel>
+              <Select name="containerTool" value={formData.containerTool} onChange={handleChange}>
+                <option value="Docker">Docker</option>
+                <option value="Podman">Podman</option>
+                <option value="LXC">LXC</option>
+              </Select>
+            </FormControl>
+          </Card>
+          <Card m='10px'>
+            <FormLabel>AWS access key</FormLabel>
+            <Input type="text" name="AWSAccessKey" value={formData.AWSAccessKey} onChange={handleChange} />
+            <FormLabel>AWS secret access key</FormLabel>
+            <Input type="text" name="AWSSecretAccessKey" value={formData.AWSSecretAccessKey} onChange={handleChange} />
+          </Card>
           <Button mt="4" colorScheme={"gray"} type="submit">Submit</Button>
         </form>
       </Box>
