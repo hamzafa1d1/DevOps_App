@@ -67,6 +67,9 @@ import Card from "components/card/Card"
 
 export default function Pipelines() {
 
+  const [selectedFile, setSelectedFile] = useState(null);
+
+
   const [formData, setFormData] = useState({
     testingFramework: '',
     testFile: null,
@@ -113,7 +116,8 @@ export default function Pipelines() {
               <Button onClick={() => document.querySelector('input[type="file"]').click()}>
                 Choose File
               </Button>
-              <Input type="file" name="testFile" accept=".cpp,.h" style={{display: "none"}} />
+              <Input type="file" name="testFile" accept=".cpp,.h" style={{display: "none"}} onChange={(e) => setSelectedFile(e.target.files[0].name)}/>
+              {selectedFile && <div>Selected file: {selectedFile}</div>}
             </FormControl>
           </Card>
           <Card m='10px'>
