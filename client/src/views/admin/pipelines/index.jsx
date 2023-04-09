@@ -33,13 +33,19 @@ import {
   FormControl,
   Input,
   Textarea,
-  Button
-} from "@chakra-ui/react";
+  Text,
+  Button,
+  Checkbox,
+  CheckboxGroup,
+  Stack,
+  HStack,
+  VStack } from "@chakra-ui/react";
 // Assets
 import Usa from "assets/img/dashboards/usa.png";
 // Custom components
 import MiniCalendar from "components/calendar/MiniCalendar";
 import MiniStatistics from "components/card/MiniStatistics";
+import Card from "components/card/Card";
 import IconBox from "components/icons/IconBox";
 import React, {useState} from "react";
 import {
@@ -67,6 +73,7 @@ import Banner from "../pipelines/components/Banner";
 export default function Pipelines() {
 
   const [formData, setFormData] = useState({
+    description: '',
     name: '',
     email: '',
     message: ''
@@ -92,6 +99,19 @@ export default function Pipelines() {
       <Box bg={boxBg} p="4" mt="4">
         <form onSubmit={handleSubmit}>
           <FormControl>
+            <FormLabel>Description</FormLabel>
+                <Input type="text" name="description" value={formData.description} onChange={handleChange} placeholder="Write your description here!" style={{ width: "100%", height: "100px" }}/>
+          </FormControl>
+          <FormControl mt="4"></FormControl>
+          <CheckboxGroup colorScheme='purple' >
+            <VStack spacing={5} align="start">
+              <Checkbox value='Discard Old builds'>Discard Old builds</Checkbox>
+              <Checkbox value='Github project'>Github project</Checkbox>
+              <Checkbox value='Throttle builds'>Throttle builds</Checkbox>
+              <Checkbox value='Execute concurrent builds if necessary'>Execute concurrent builds if necessary</Checkbox>
+            </VStack>
+          </CheckboxGroup>
+          <FormControl mt="4">
             <FormLabel>Name</FormLabel>
             <Input type="text" name="name" value={formData.name} onChange={handleChange} />
           </FormControl>
