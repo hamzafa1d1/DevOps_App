@@ -66,13 +66,14 @@ import tableDataComplex from "views/admin/default/variables/tableDataComplex.jso
 import Banner from "../pipelines/components/Banner";
 import Card from "components/card/Card"
 
-
-
 export default function Pipelines() {
   const textColorSecondary = "gray.400";
   const brandStars = useColorModeValue("brand.500", "brand.400");
   const textColor = useColorModeValue("navy.700", "white");
   const [show, setShow] = React.useState(false);
+
+  const [selectedFile, setSelectedFile] = useState(null);
+
 
   const [formData, setFormData] = useState({
     testingFramework: '',
@@ -133,6 +134,7 @@ export default function Pipelines() {
       <Banner />
       <Box bg={boxBg} p="4" mt="4">
         <form onSubmit={handleSubmit}>
+
         <FormControl>
             <FormLabel> Description </FormLabel>
                 <Input type="text" name="description" value={formData.description} onChange={handleChange} placeholder="Write your description here!" style={{ width: "100%", height: "100px" }}/>
@@ -271,7 +273,9 @@ export default function Pipelines() {
         )}
       </div>
     </div>
-            <Card p ='4' m='10px'>
+          
+          <Card p ='4' m='10px'>
+
             <FormControl mt ='4'>
               <FormLabel>Unit Testing Framework</FormLabel>
               <Select name="testingFramework" value={formData.testingFramework} onChange={handleChange}>
@@ -285,7 +289,10 @@ export default function Pipelines() {
               <Button onClick={() => document.querySelector('input[type="file"]').click()}>
                 Choose File
               </Button>
-              <Input type="file" name="testFile" accept=".cpp,.h" style={{display: "none"}} />
+
+              <Input type="file" name="testFile" accept=".cpp,.h" style={{display: "none"}} onChange={(e) => setSelectedFile(e.target.files[0].name)}/>
+              {selectedFile && <div>Selected file: {selectedFile}</div>}
+
             </FormControl>
           </Card>
           <Card m='10px'>
