@@ -33,7 +33,9 @@ import {
   FormControl,
   Input,
   Textarea,
-  Button
+  Button,
+  Text,
+  InputGroup,
 } from "@chakra-ui/react";
 // Assets
 import Usa from "assets/img/dashboards/usa.png";
@@ -64,8 +66,11 @@ import tableDataComplex from "views/admin/default/variables/tableDataComplex.jso
 import Banner from "../pipelines/components/Banner";
 import Card from "components/card/Card"
 
-
 export default function Pipelines() {
+  const textColorSecondary = "gray.400";
+  const brandStars = useColorModeValue("brand.500", "brand.400");
+  const textColor = useColorModeValue("navy.700", "white");
+  const [show, setShow] = React.useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -75,9 +80,36 @@ export default function Pipelines() {
     testFile: null,
     containerTool:'',
     AWSAccessKey: '',
-    AWSSecretAccessKey: ''
+    AWSSecretAccessKey: '',
+    Strategy:'',
+    description:'',
+    daysToKeepBuilds:''
   });
+  const [isChecked, setIsChecked] = useState(false);
 
+  // const handleCheckboxChange = (event) => {
+  //   setIsChecked(event.target.checked);
+  // }
+  const [discardBuilds, setDiscardBuilds] = useState(false);
+  const [githubProject, setGithubProject] = useState(false);
+  const [throttleBuilds, setThrottleBuilds] = useState(false);
+  const [concurrentBuilds, setConcurrentBuilds] = useState(false);
+
+  const handleDiscardBuildsChange = (event) => {
+    setDiscardBuilds(event.target.checked);
+  };
+
+  const handleGithubProjectChange = (event) => {
+    setGithubProject(event.target.checked);
+  };
+
+  const handleThrottleBuildsChange = (event) => {
+    setThrottleBuilds(event.target.checked);
+  };
+
+  const handleConcurrentBuildsChange = (event) => {
+    setConcurrentBuilds(event.target.checked);
+  };
   // Form submission handler
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -102,7 +134,148 @@ export default function Pipelines() {
       <Banner />
       <Box bg={boxBg} p="4" mt="4">
         <form onSubmit={handleSubmit}>
+
+        <FormControl>
+            <FormLabel> Description </FormLabel>
+                <Input type="text" name="description" value={formData.description} onChange={handleChange} placeholder="Write your description here!" style={{ width: "100%", height: "100px" }}/>
+          </FormControl>
+          <FormControl mt="4"></FormControl>       
+    <div>
+      <div style={{ marginBottom: '1rem' }}>
+        <label>
+          <input
+            type="checkbox"
+            checked={discardBuilds}
+            onChange={handleDiscardBuildsChange}
+          />
+          Discard Old Builds
+        </label>
+
+        {discardBuilds && (
+          <>
+          <div>
+            <Select name="Strategy" value={formData.testingFramework} onChange={handleChange}>
+                <option value="Log-Rotation">Log Rotation</option>
+              </Select>
+              <FormControl>
+            <FormLabel
+              display='flex'
+              ms='4px'
+              fontSize='sm'
+              fontWeight='500'
+              color={textColor}
+              mb='8px'>
+              Days to keep builds<Text color={brandStars}></Text>
+            </FormLabel>
+            <Input
+              isRequired={true}
+              variant='auth'
+              fontSize='sm'
+              ms={{ base: "0px", md: "0px" }}
+              type='text'
+              mb='24px'
+              fontWeight='500'
+              size='lg'
+            />
+            <FormLabel
+              ms='4px'
+              fontSize='sm'
+              fontWeight='500'
+              color={textColor}
+              display='flex'>
+              Max # of builds to keep<Text color={brandStars}></Text>
+            </FormLabel>
+            <InputGroup size='md'>
+              <Input
+                isRequired={true}
+                fontSize='sm'
+                placeholder='Min. 8 characters'
+                mb='24px'
+                size='lg'
+                type="text"
+                variant='auth'
+              />
+              </InputGroup> 
+              </FormControl>            
+              </div>
+          </>
+        )}
+      </div>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <label>
+          <input
+            type="checkbox"
+            checked={githubProject}
+            onChange={handleGithubProjectChange}
+            colorScheme="purple"
+          />
+          Github Project
+        </label>
+        {githubProject && (
+          <>
+            <FormControl>
+            <FormLabel
+              display='flex'
+              ms='4px'
+              fontSize='sm'
+              fontWeight='500'
+              color={textColor}
+              mb='8px'>
+              Project url<Text color={brandStars}></Text>
+            </FormLabel>
+            <Input
+              isRequired={true}
+              variant='auth'
+              fontSize='sm'
+              ms={{ base: "0px", md: "0px" }}
+              type='text'
+              mb='24px'
+              fontWeight='500'
+              size='lg'
+            />
+            </FormControl>
+          </>
+        )}
+      </div>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <label>
+          <input
+            type="checkbox"
+            checked={throttleBuilds}
+            onChange={handleThrottleBuildsChange}
+          />
+          Throttle Builds
+        </label>
+
+        {throttleBuilds && (
+          <>
+            <textarea style={{ marginBottom: '0.5rem' }} />
+            <div>Additional content here</div>
+          </>
+        )}
+      </div>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <label>
+          <input
+            type="checkbox"
+            checked={concurrentBuilds}
+            onChange={handleConcurrentBuildsChange}
+          />
+          Execute Concurrent Builds if Necessary
+        </label>
+
+        {concurrentBuilds && (
+          <>
+          </>
+        )}
+      </div>
+    </div>
+          
           <Card p ='4' m='10px'>
+
             <FormControl mt ='4'>
               <FormLabel>Unit Testing Framework</FormLabel>
               <Select name="testingFramework" value={formData.testingFramework} onChange={handleChange}>
@@ -116,8 +289,10 @@ export default function Pipelines() {
               <Button onClick={() => document.querySelector('input[type="file"]').click()}>
                 Choose File
               </Button>
+
               <Input type="file" name="testFile" accept=".cpp,.h" style={{display: "none"}} onChange={(e) => setSelectedFile(e.target.files[0].name)}/>
               {selectedFile && <div>Selected file: {selectedFile}</div>}
+
             </FormControl>
           </Card>
           <Card m='10px'>
