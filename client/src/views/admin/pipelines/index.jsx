@@ -19,12 +19,13 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 // Chakra imports
 import {
   Avatar,
   Box,
   Flex,
+  IconButton,
   FormLabel,
   Icon,
   Select,
@@ -83,17 +84,28 @@ export default function Pipelines() {
     AWSSecretAccessKey: '',
     Strategy:'',
     description:'',
-    daysToKeepBuilds:''
+    daysToKeepBuilds: '',
+    githubURL: '',
+    branchname:'',
+    username: '',
+    password: '',
+    sshkey: '',
+    MaxOfBuildsToKeep: '',
   });
   const [isChecked, setIsChecked] = useState(false);
-
-  // const handleCheckboxChange = (event) => {
-  //   setIsChecked(event.target.checked);
-  // }
   const [discardBuilds, setDiscardBuilds] = useState(false);
   const [githubProject, setGithubProject] = useState(false);
-  const [throttleBuilds, setThrottleBuilds] = useState(false);
-  const [concurrentBuilds, setConcurrentBuilds] = useState(false);
+  const [username, setUsernameValue] = useState('');
+  const [password, setPasswordValue] = useState('');
+  const [sshkey, setSSHkeyValue] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showSSHkey, setShowSSHkey] = useState(false);
+  const handlePasswordToggle = () => {
+    setShowPassword(!showPassword);
+  };
+  const handleSSHkeyToggle = () => {
+    setShowSSHkey(!showSSHkey);
+  };
 
   const handleDiscardBuildsChange = (event) => {
     setDiscardBuilds(event.target.checked);
@@ -102,21 +114,12 @@ export default function Pipelines() {
   const handleGithubProjectChange = (event) => {
     setGithubProject(event.target.checked);
   };
-
-  const handleThrottleBuildsChange = (event) => {
-    setThrottleBuilds(event.target.checked);
-  };
-
-  const handleConcurrentBuildsChange = (event) => {
-    setConcurrentBuilds(event.target.checked);
-  };
   // Form submission handler
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(formData.testingFramework)
     // handle form submission here
   };
-
   // Form input change handler
   const handleChange = (event) => {
     if (event.target.name === "testFile") {
@@ -125,7 +128,6 @@ export default function Pipelines() {
       setFormData({ ...formData, [event.target.name]: event.target.value });
     }
   };
-
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -134,14 +136,17 @@ export default function Pipelines() {
       <Banner />
       <Box bg={boxBg} p="4" mt="4">
         <form onSubmit={handleSubmit}>
-
+      <Card m='10px'>
         <FormControl>
             <FormLabel> Description </FormLabel>
                 <Input type="text" name="description" value={formData.description} onChange={handleChange} placeholder="Write your description here!" style={{ width: "100%", height: "100px" }}/>
           </FormControl>
-          <FormControl mt="4"></FormControl>       
+          <FormControl mt="4"></FormControl>
+          </Card>       
     <div>
+    <Card m='10px'>
       <div style={{ marginBottom: '1rem' }}>
+      
         <label>
           <input
             type="checkbox"
@@ -150,13 +155,9 @@ export default function Pipelines() {
           />
           Discard Old Builds
         </label>
-
         {discardBuilds && (
           <>
           <div>
-            <Select name="Strategy" value={formData.testingFramework} onChange={handleChange}>
-                <option value="Log-Rotation">Log Rotation</option>
-              </Select>
               <FormControl>
             <FormLabel
               display='flex'
@@ -165,9 +166,10 @@ export default function Pipelines() {
               fontWeight='500'
               color={textColor}
               mb='8px'>
-              Days to keep builds<Text color={brandStars}></Text>
+              Days to keep builds<Text color={brandStars}>*</Text>
             </FormLabel>
             <Input
+            name='daysToKeepBuilds'
               isRequired={true}
               variant='auth'
               fontSize='sm'
@@ -183,13 +185,14 @@ export default function Pipelines() {
               fontWeight='500'
               color={textColor}
               display='flex'>
-              Max # of builds to keep<Text color={brandStars}></Text>
+              Max # of builds to keep<Text color={brandStars}>*</Text>
             </FormLabel>
             <InputGroup size='md'>
               <Input
+              name='MaxOfBuildsToKeep'
                 isRequired={true}
                 fontSize='sm'
-                placeholder='Min. 8 characters'
+                placeholder='type a number'
                 mb='24px'
                 size='lg'
                 type="text"
@@ -201,8 +204,11 @@ export default function Pipelines() {
           </>
         )}
       </div>
-
+      </Card>
+      
+      
       <div style={{ marginBottom: '1rem' }}>
+      <Card m='10px'>
         <label>
           <input
             type="checkbox"
@@ -214,7 +220,7 @@ export default function Pipelines() {
         </label>
         {githubProject && (
           <>
-            <FormControl>
+             <FormControl>
             <FormLabel
               display='flex'
               ms='4px'
@@ -225,9 +231,11 @@ export default function Pipelines() {
               Project url<Text color={brandStars}></Text>
             </FormLabel>
             <Input
+            name='githubURL'
               isRequired={true}
               variant='auth'
               fontSize='sm'
+              placeholder="https://github.com/user/repo.git"
               ms={{ base: "0px", md: "0px" }}
               type='text'
               mb='24px'
@@ -235,45 +243,137 @@ export default function Pipelines() {
               size='lg'
             />
             </FormControl>
+            <FormControl>
+            <FormLabel
+              display='flex'
+              ms='4px'
+              fontSize='sm'
+              fontWeight='500'
+              color={textColor}
+              mb='8px'>
+              Branch name<Text color={brandStars}>*</Text>
+            </FormLabel>
+            <Input
+            name='branchname'
+              isRequired={true}
+              variant='auth'
+              fontSize='sm'
+              placeholder="master"
+              ms={{ base: "0px", md: "0px" }}
+              type='text'
+              mb='24px'
+              fontWeight='500'
+              size='lg'
+            />
+            </FormControl>
+            <FormControl>
+            <FormLabel
+              display='flex'
+              ms='4px'
+              fontSize='sm'
+              fontWeight='500'
+              color={textColor}
+              mb='8px'>
+              Username<Text color={brandStars}></Text>
+            </FormLabel>
+              <Input
+              name='username'
+              isRequired={true}
+              variant='auth'
+              fontSize='sm'
+              placeholder="Hamzafa1d1"
+              ms={{ base: "0px", md: "0px" }}
+              type='text'
+              mb='24px'
+              fontWeight='500'
+              size='lg'
+              value={username}
+              onChange={(e) => setUsernameValue(e.target.value)}
+            />
+            </FormControl>
+            <FormControl>
+            <FormLabel
+              display='flex'
+              ms='4px'
+              fontSize='sm'
+              fontWeight='500'
+              color={textColor}
+              mb='8px'>
+              Password<Text color={brandStars}></Text>
+            </FormLabel>
+              <Input
+              name='password'
+              isRequired={true}
+              variant='auth'
+              type={showPassword ? 'text' : 'password'}
+              fontSize='sm'
+              placeholder="******"
+              ms={{ base: "0px", md: "0px" }}
+              mb='24px'
+              fontWeight='500'
+              size='lg'
+              value={password}
+              onChange={(e) => setPasswordValue(e.target.value)}
+            />
+             <button
+        onClick={handlePasswordToggle}
+        style={{
+          position: 'absolute',
+          right: '10px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          backgroundColor: 'transparent',
+          border: 'none',
+        }}
+        aria-label={showPassword ? 'Hide password' : 'Show password'}
+      >
+        {showPassword ? <FaEyeSlash /> : <FaEye />}
+      </button>
+            </FormControl>
+            <FormControl>
+            <FormLabel
+              display='flex'
+              ms='4px'
+              fontSize='sm'
+              fontWeight='500'
+              color={textColor}
+              mb='8px'>
+              ssh Key<Text color={brandStars}>*</Text>
+            </FormLabel>
+              <Input
+              name='sshkey'
+              isRequired={true}
+              variant='auth'
+              type={showSSHkey ? 'text' : 'sshkey'}
+              fontSize='sm'
+              placeholder="********"
+              ms={{ base: "0px", md: "0px" }}
+              mb='24px'
+              fontWeight='500'
+              size='lg'
+              value={sshkey}
+              onChange={(e) => setSSHkeyValue(e.target.value)}
+            />
+             <button
+             onClick={handleSSHkeyToggle}
+             style={{
+               position: 'absolute',
+               right: '10px',
+               top: '50%',
+               transform: 'translateY(-50%)',
+               backgroundColor: 'transparent',
+               border: 'none',
+             }}
+             aria-label={showSSHkey ? 'Hide sshkey' : 'Show sshkey'}
+           >
+             {showSSHkey ? <FaEyeSlash /> : <FaEye />}
+      </button>
+            </FormControl>
           </>
         )}
+        </Card>
       </div>
-
-      <div style={{ marginBottom: '1rem' }}>
-        <label>
-          <input
-            type="checkbox"
-            checked={throttleBuilds}
-            onChange={handleThrottleBuildsChange}
-          />
-          Throttle Builds
-        </label>
-
-        {throttleBuilds && (
-          <>
-            <textarea style={{ marginBottom: '0.5rem' }} />
-            <div>Additional content here</div>
-          </>
-        )}
-      </div>
-
-      <div style={{ marginBottom: '1rem' }}>
-        <label>
-          <input
-            type="checkbox"
-            checked={concurrentBuilds}
-            onChange={handleConcurrentBuildsChange}
-          />
-          Execute Concurrent Builds if Necessary
-        </label>
-
-        {concurrentBuilds && (
-          <>
-          </>
-        )}
-      </div>
-    </div>
-          
+    </div>           
           <Card p ='4' m='10px'>
 
             <FormControl mt ='4'>
