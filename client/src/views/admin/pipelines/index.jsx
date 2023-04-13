@@ -52,7 +52,7 @@ export default function Pipelines() {
     const textColor = useColorModeValue("navy.700", "white");
     const [show, setShow] = React.useState(false);
 
-    const [selectedFile, setSelectedFile] = useState(null);
+
 
 
     const [formData, setFormData] = useState({
@@ -73,9 +73,6 @@ export default function Pipelines() {
     const [isChecked, setIsChecked] = useState(false);
     const [discardBuilds, setDiscardBuilds] = useState(false);
     const [githubProject, setGithubProject] = useState(false);
-    const [username, setUsernameValue] = useState('');
-    const [password, setPasswordValue] = useState('');
-    const [sshKey, setSshKeyValue] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showSSHkey, setShowSSHkey] = useState(false);
     const handlePasswordToggle = () => {
@@ -121,7 +118,7 @@ export default function Pipelines() {
         <Box pt={{base: "130px", md: "80px", xl: "80px"}}>
             <Banner/>
             <Box bg={boxBg} p="4" mt="4">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} >
                     <Card m='10px'>
                         <FormControl>
                             <FormLabel> Description </FormLabel>
@@ -195,7 +192,6 @@ export default function Pipelines() {
                             )}
                         </div>
                     </Card>
-
 
                     <div style={{marginBottom: '1rem'}}>
                         <Card m='10px'>
@@ -310,6 +306,7 @@ export default function Pipelines() {
                                             onChange={handleChange}
                                         />
                                         <button
+                                            type="button"
                                             onClick={handlePasswordToggle}
                                             style={{
                                                 position: 'absolute',
@@ -349,6 +346,7 @@ export default function Pipelines() {
                                             onChange={handleChange}
                                         />
                                         <button
+                                            type = "button"
                                             onClick={handleSSHkeyToggle}
                                             style={{
                                                 position: 'absolute',
@@ -384,8 +382,8 @@ export default function Pipelines() {
                             </Button>
 
                             <Input type="file" name="testFile" accept=".cpp,.h" style={{display: "none"}}
-                                   onChange={(e) => setSelectedFile(e.target.files[0].name)}/>
-                            {selectedFile && <div>Selected file: {selectedFile}</div>}
+                                   onChange={handleChange}/>
+                            {formData.testFile && <div>Selected file: {formData.testFile.name}</div>}
 
                         </FormControl>
                     </Card>
@@ -406,7 +404,7 @@ export default function Pipelines() {
                         <Input type="text" name="awsSecretAccessKey" value={formData.awsSecretAccessKey}
                                onChange={handleChange}/>
                     </Card>
-                    <Button mt="4" colorScheme={"gray"} type="submit">Submit</Button>
+                    <Button  mt="4" colorScheme={"gray"} type="submit">Submit</Button>
                 </form>
             </Box>
         </Box>

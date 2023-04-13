@@ -10,7 +10,7 @@ import com.p2m.devopsApp.model.PipelineData;
 public class PipelineDataController {
     @PostMapping("/pipelineData")
     public String handlingPipelineData(@ModelAttribute PipelineData pipelineData){
-        System.out.println(pipelineData.getAwsAccessKey());
+        System.out.println(pipelineData.getUnitTest());
         return "done" ;
     }
 }
