@@ -1,8 +1,15 @@
 package com.p2m.devopsApp.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.web.multipart.MultipartFile;
 
-public class PipelineData {
+import java.util.List;
+
+@Document(collection= "pipelines")
+public class PipelineEntity {
+    @Id
+    private String id ;
     private String pipelineName;
     private String description ;
     private Integer daysToKeepBuild ;
@@ -16,24 +23,17 @@ public class PipelineData {
     private String containerTool ;
     private String awsAccessKey ;
     private String awsSecretAccessKey ;
-    private MultipartFile unitTest ;
+    private CppFile unitTest ;
+    private List<BuildEntity> builds ;
+    private List<ContainerEntity> containers ;
+    private List<unitTestsEntity> tests;
 
+    public String getId() {
+        return id;
+    }
 
-    public PipelineData(String pipelineName, String description, Integer daysToKeepBuild, Integer maxOfBuildsToKeep, String githubURL, String branchName, String username, String password, String sshKey, String testingFramework, String containerTool, String awsAccessKey, String awsSecretAccessKey, MultipartFile unitTest) {
-        this.pipelineName = pipelineName;
-        this.description = description;
-        this.daysToKeepBuild = daysToKeepBuild;
-        this.maxOfBuildsToKeep = maxOfBuildsToKeep;
-        this.githubURL = githubURL;
-        this.branchName = branchName;
-        this.username = username;
-        this.password = password;
-        this.sshKey = sshKey;
-        this.testingFramework = testingFramework;
-        this.containerTool = containerTool;
-        this.awsAccessKey = awsAccessKey;
-        this.awsSecretAccessKey = awsSecretAccessKey;
-        this.unitTest = unitTest;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -132,14 +132,39 @@ public class PipelineData {
         this.awsSecretAccessKey = awsSecretAccessKey;
     }
 
-    public MultipartFile getUnitTest() {
+
+
+    public List<BuildEntity> getBuilds() {
+        return builds;
+    }
+
+    public void setBuilds(List<BuildEntity> builds) {
+        this.builds = builds;
+    }
+
+    public List<ContainerEntity> getContainers() {
+        return containers;
+    }
+
+    public void setContainers(List<ContainerEntity> containers) {
+        this.containers = containers;
+    }
+
+    public List<unitTestsEntity> getTests() {
+        return tests;
+    }
+
+    public void setTests(List<unitTestsEntity> tests) {
+        this.tests = tests;
+    }
+
+    public CppFile getUnitTest() {
         return unitTest;
     }
 
-    public void setUnitTest(MultipartFile unitTest) {
+    public void setUnitTest(CppFile unitTest) {
         this.unitTest = unitTest;
     }
-
     public String getPipelineName() {
         return pipelineName;
     }

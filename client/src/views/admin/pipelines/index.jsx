@@ -56,9 +56,10 @@ export default function Pipelines() {
 
 
     const [formData, setFormData] = useState({
-        testingFramework: '',
+        pipelineName:'',
+        testingFramework: 'Google Test',
         testFile: null,
-        containerTool: '',
+        containerTool: 'docker',
         awsAccessKey: '',
         awsSecretAccessKey: '',
         description: '',
@@ -119,6 +120,10 @@ export default function Pipelines() {
             <Banner/>
             <Box bg={boxBg} p="4" mt="4">
                 <form onSubmit={handleSubmit} >
+                    <Card m='10px'>
+                        <FormLabel>Your Pipeline's name here</FormLabel>
+                        <Input type="text" name="pipelineName" value={formData.pipelineName} onChange={handleChange}/>
+                    </Card>
                     <Card m='10px'>
                         <FormControl>
                             <FormLabel> Description </FormLabel>
