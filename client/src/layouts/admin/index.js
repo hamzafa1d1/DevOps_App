@@ -117,6 +117,7 @@ export default function Dashboard(props) {
         value={{
           toggleSidebar,
           setToggleSidebar,
+
         }}>
         <Sidebar routes={routes} display='none' {...rest} />
         <Box

@@ -26,7 +26,7 @@ import Menu from "components/menu/MainMenu";
 // Assets
 import { MdCheckCircle, MdCancel, MdOutlineError } from "react-icons/md";
 export default function ColumnsTable(props) {
-  const { columnsData, tableData } = props;
+  const { columnsData, tableData, title } = props;
 
   const columns = useMemo(() => columnsData, [columnsData]);
   const data = useMemo(() => tableData, [tableData]);
@@ -65,7 +65,7 @@ export default function ColumnsTable(props) {
           fontSize='22px'
           fontWeight='700'
           lineHeight='100%'>
-          Complex Table
+          {title}
         </Text>
         <Menu />
       </Flex>
@@ -112,20 +112,20 @@ export default function ColumnsTable(props) {
                           h='24px'
                           me='5px'
                           color={
-                            cell.value === "Approved"
+                            cell.value === "Completed"
                               ? "green.500"
-                              : cell.value === "Disable"
-                              ? "red.500"
                               : cell.value === "Error"
+                              ? "red.500"
+                              : cell.value === "InProgress"
                               ? "orange.500"
                               : null
                           }
                           as={
-                            cell.value === "Approved"
+                            cell.value === "Completed"
                               ? MdCheckCircle
-                              : cell.value === "Disable"
-                              ? MdCancel
                               : cell.value === "Error"
+                              ? MdCancel
+                              : cell.value === "InProgress"
                               ? MdOutlineError
                               : null
                           }
@@ -134,12 +134,6 @@ export default function ColumnsTable(props) {
                           {cell.value}
                         </Text>
                       </Flex>
-                    );
-                  } else if (cell.column.Header === "DATE") {
-                    data = (
-                      <Text color={textColor} fontSize='sm' fontWeight='700'>
-                        {cell.value}
-                      </Text>
                     );
                   } else if (cell.column.Header === "PROGRESS") {
                     data = (
