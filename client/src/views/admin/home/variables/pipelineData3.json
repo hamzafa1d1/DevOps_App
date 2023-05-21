@@ -1,0 +1,31 @@
+[
+  {
+    "name":"Retreiving source code from github",
+    "status": "Completed",
+    "progress": 100
+  },
+  {
+    "name":"Building",
+    "status": "Completed",
+
+    "progress": 100
+  },
+  {
+    "name":"Testing ",
+    "status": "Completed",
+
+    "progress": 100
+  },
+  {
+    "name":"Containerizing ",
+    "status": "Completed",
+
+    "progress": 100
+  },
+  {
+    "name":"Deploying ",
+    "status": "Completed",
+
+    "progress": 100
+  }
+]

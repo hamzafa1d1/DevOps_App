@@ -49,6 +49,7 @@ function Sidebar(props) {
         minH='100%'
         overflowX='hidden'
         boxShadow={shadow}>
+
         <Scrollbars
           autoHide
           renderTrackVertical={renderTrack}
